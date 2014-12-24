@@ -1,6 +1,6 @@
 var canvas = document.createElement("canvas");
-canvas.setAttribute("id", "gamescreen");
+canvas.id = "gamescreen";
 document.body.appendChild(canvas);
-/*var ctx = canvas.getContext("2d");
+var ctx = canvas.getContext("2d");
 ctx.fillStyle = "green";
-ctx.fillRect(0,0,100,100);*/
+ctx.fillRect(0,0,100,100);
