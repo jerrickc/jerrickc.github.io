@@ -1,7 +1,10 @@
 //Please wait warmly, document is preparing...
+var boxSize = 15;
 var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
 canvas.id = "gamescreen";
+canvas.height = (boxSize + 1) * 29 + 1;
+canvas.width = (boxSize + 1) * 29 + 1;
 sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(sizeButton);
@@ -13,7 +16,6 @@ document.body.appendChild(canvas);
 //Document prep done by here, code below is the game
 var ctx = canvas.getContext("2d");
 var gameboard = makeBoard();
-var boxSize = 50;
 var gameWidth = $(canvas).width();
 var gameHeight = $(canvas).height();
 theBigLoop = setInterval(function() {
@@ -26,7 +28,7 @@ function makeBoard() { //Javascript doesn't make 2D arrays with [][] so I put so
     for (var i = 0; i < 29; i++) {
         newBoard[i] = new Array(29);
     }
-    newBoard[15][15] = -1;
+    newBoard[14][14] = -1;
     return newBoard;
 }
 
@@ -34,7 +36,10 @@ function resize() { //Leeet us zee if zis vurkz
 
     var newSize = prompt("Enter desired box size in pixels");
     boxSize = parseInt(newSize);
-    //LATER ADDITION: resize the canvas and stuff
+    gameWidth = (boxSize + 1) * 29 + 1; //gotta be large enough for 1 more line at the end of the squares + lines
+    gameHeight = gameWidth;
+    canvas.height = gameHeight;
+    canvas.width = gameWidth;
     drawGame();
 }
 
@@ -51,37 +56,57 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
 }
 
 function gameLoop() {
-    console.log("looping");
     drawGame();
 }
 
 function drawGame() {
     ctx.clearRect(0, 0, gameWidth, gameHeight);
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = "#000000";
     ctx.miterLimit = 1;
-    for (var yLine = 0; yLine < 29; yLine++) {
-        if (yLine === 0) {
-            ctx.lineWidth = 1;
-        }
+    for (var yLine = 0; yLine <= 29; yLine++) {
         ctx.beginPath();
-        ctx.moveTo(0, (boxSize + 2) * yLine + 1);
-        ctx.lineTo(gameWidth, (boxSize + 2) * yLine + 1);
+        ctx.moveTo(0, (boxSize + 1) * yLine + 1);
+        ctx.lineTo(gameWidth, (boxSize + 1) * yLine + 1);
         ctx.stroke();
-        if (yLine === 0) {
-            ctx.lineWidth = 1;
+    }
+    for (var xLine = 0; xLine <= 29; xLine++) {
+        ctx.beginPath();
+        ctx.moveTo((boxSize + 1) * xLine + 1, 0);
+        ctx.lineTo((boxSize + 1) * xLine + 1, gameHeight);
+        ctx.stroke();
+    }
+    for (var y = 0; y < 29; y++) {
+        for (var x = 0; x < 29; x++) {
+            switch (gameboard[x][y]) { //LUXURIOUS AND GLORIOUS SEVEN-COLOR BARRAGE
+                    case -1:
+                        ctx.fillStyle = "#bbbbbb";
+                        break;
+                    case 0:
+                        ctx.fillStyle = "#ffffff";
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    default:
+                    ctx.fillStyle = "#ffffff";
+                }
+                ctx.fillRect((boxSize + 1) * x + 1, (boxSize + 1) * y + 1, boxSize, boxSize);
+                //LATER ADDITION: draw boxes
         }
     }
-    for (var xLine = 0; xLine < 29; xLine++) {
-        if (xLine === 0) {
-            ctx.lineWidth = 1;
-        }
-        ctx.beginPath();
-        ctx.moveTo((boxSize + 2) * xLine + 1, 0);
-        ctx.lineTo((boxSize + 2) * xLine + 1, gameHeight);
-        ctx.stroke();
-        if (xLine === 0) {
-            ctx.lineWidth = 1;
-        }
-    }
-    //LATER ADDITION: draw boxes
 }
