@@ -1,0 +1,8 @@
+gameBoard squares: 0 means empty square, 1-7 is a colored block, 8 is a seed block, and 9 is a newly spawned block
+To be added:
+drawing boxes
+rotatecounter variable limiting rotation
+resizing for the canvas
+Difficulty sliders:
+rotations allowed(1/2)
+board size(29x29/27x27)
