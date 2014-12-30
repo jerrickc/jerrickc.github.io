@@ -1,10 +1,11 @@
 //Please wait warmly, document is preparing...
 var boxSize = 15;
+var lineSize = 2;
 var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
 canvas.id = "gamescreen";
-canvas.height = (boxSize + 1) * 29 + 1;
-canvas.width = (boxSize + 1) * 29 + 1;
+canvas.height = (boxSize + lineSize) * 29 + lineSize;
+canvas.width = (boxSize + lineSize) * 29 + lineSize;
 sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(sizeButton);
@@ -13,12 +14,13 @@ $("#resizeButton").bind("mousedown", function() {
 });
 document.body.appendChild(document.createElement("br"));
 document.body.appendChild(canvas);
-//Document prep done by here, code below is the game
+//Document prep done by here, code below is the game    
 var ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = "false";
 var gameboard = makeBoard();
 var gameWidth = $(canvas).width();
 var gameHeight = $(canvas).height();
-theBigLoop = setInterval(function() {
+var theBigLoop = setInterval(function() {
     gameLoop();
 }, 250);
 //Game functions below
@@ -36,7 +38,7 @@ function resize() { //Leeet us zee if zis vurkz
 
     var newSize = prompt("Enter desired box size in pixels");
     boxSize = parseInt(newSize);
-    gameWidth = (boxSize + 1) * 29 + 1; //gotta be large enough for 1 more line at the end of the squares + lines
+    gameWidth = (boxSize + lineSize) * 29 + lineSize; //gotta be large enough for 1 more line at the end of the squares + lines
     gameHeight = gameWidth;
     canvas.height = gameHeight;
     canvas.width = gameWidth;
@@ -62,17 +64,18 @@ function gameLoop() {
 function drawGame() {
     ctx.clearRect(0, 0, gameWidth, gameHeight);
     ctx.strokeStyle = "#000000";
-    ctx.miterLimit = 1;
+    ctx.lineWidth = lineSize;
+    ctx.miterLimit = 0;
     for (var yLine = 0; yLine <= 29; yLine++) {
         ctx.beginPath();
-        ctx.moveTo(0, (boxSize + 1) * yLine + 1);
-        ctx.lineTo(gameWidth, (boxSize + 1) * yLine + 1);
+        ctx.moveTo(0, (boxSize + lineSize) * yLine + lineSize/2);
+        ctx.lineTo(gameWidth, (boxSize + lineSize) * yLine + lineSize/2);
         ctx.stroke();
     }
     for (var xLine = 0; xLine <= 29; xLine++) {
         ctx.beginPath();
-        ctx.moveTo((boxSize + 1) * xLine + 1, 0);
-        ctx.lineTo((boxSize + 1) * xLine + 1, gameHeight);
+        ctx.moveTo((boxSize + lineSize) * xLine + lineSize/2, 0);
+        ctx.lineTo((boxSize + lineSize) * xLine + lineSize/2, gameHeight);
         ctx.stroke();
     }
     for (var y = 0; y < 29; y++) {
@@ -105,7 +108,7 @@ function drawGame() {
                     default:
                     ctx.fillStyle = "#ffffff";
                 }
-                ctx.fillRect((boxSize + 1) * x + 1, (boxSize + 1) * y + 1, boxSize, boxSize);
+                ctx.fillRect((boxSize + lineSize) * x + lineSize, (boxSize + lineSize) * y + lineSize, boxSize, boxSize);
                 //LATER ADDITION: draw boxes
         }
     }
