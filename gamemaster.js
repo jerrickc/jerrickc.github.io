@@ -15,7 +15,7 @@ $("#resizeButton").on("mousedown", function() {
 document.body.appendChild(document.createElement("br"));
 document.body.appendChild(canvas);
 document.getElementById("gamescreen").style = "display: block; margin: 0 auto;";
-$("*").on("keydown", function(event) {
+$("*").on("keyup", function(event) {
     handleIt(event);
     event.stopPropagation();
 });
@@ -73,6 +73,12 @@ function handleIt() { //Raid Leader
                 moveDirection = "down";
                 handleAction = true;
                 break;
+            case 90: //90 is z
+                spinBoard("left");
+                break;
+            case 88: //88 is x
+                spinBoard("right");
+                break;
         }
     }
 }
@@ -90,11 +96,208 @@ function resize() { //Leeet us zee if zis vurkz
 }
 
 function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY SLIDER: allow 2 rotations instead of 1
+    var newBoard = new Array(29); //DIFFICULTY SLIDER: the board is 29x29 right now, might shrink it to 27x27
+    var x, y;
+    var distX, distY;
+    for (var i = 0; i < 29; i++) {
+        newBoard[i] = new Array(29);
+    }
+    for (x = 0; x < 29; x++) { //bodyblocking setup
+        for (y = 0; y < 29; y++) {
+            if (x < 7 || x > 21 || y < 7 || y > 21) {
+                newBoard[x][y] = gameboard[x][y];
+            }
+        }
+    }
+    newBoard[14][14] = 8;
     if (direction === "right") { //rotate right 90 degrees
-
+        for (x = 7; x < 22; x++) {
+            for (y = 7; y < 22; y++) {
+                newBoard[x][y] = 0;
+                distX = x - 14;
+                distY = y - 14;
+                newBoard[x][y] = gameboard[14 + distY][14 - distX];
+            }
+        }
     }
     else if (direction === "left") { //rotate left 90 degrees
-
+        for (x = 7; x < 22; x++) {
+            for (y = 7; y < 22; y++) {
+                newBoard[x][y] = 0;
+                distX = x - 14;
+                distY = y - 14;
+                newBoard[x][y] = gameboard[14 - distY][14 + distX];
+            }
+        }
+    }
+    gameboard = newBoard;
+    //check that blocks will still collide
+    var VMin = 28,
+        VMax = 0,
+        HMin = 28,
+        HMax = 0;
+    var SpawnMin, SpawnMax;
+    for (x = 7; x < 22; x++) { //find max/min of the center playspace
+        for (y = 7; y < 22; y++) {
+            if (gameboard[x][y] > 0) {
+                if (HMax < x) {
+                    HMax = x;
+                }
+                if (HMin > x) {
+                    HMin = x;
+                }
+                if (VMax < y) {
+                    VMax = y;
+                }
+                if (VMin > y) {
+                    VMin = y;
+                }
+            }
+        }
+    }
+    //check top
+    SpawnMax = 0;
+    SpawnMin = 28;
+    for (x = 7; x < 22; x++) {
+        for (y = 0; y < 7; y++) {
+            if (gameboard[x][y] == -1) {
+                if (SpawnMax < x) {
+                    SpawnMax = x;
+                }
+                if (SpawnMin > x) {
+                    SpawnMin = x;
+                }
+            }
+        }
+    }
+    console.log("max: " + SpawnMax + " min: " + SpawnMin);
+    console.log("Centermax: " + HMax + " Centermin: " + HMin);
+    while (SpawnMax < HMin) { //if needs to be moved to the right
+    console.log("moveright");
+        for (x = 21; x > 7; x--) {
+            for (y = 0; y < 7; y++) {
+                gameboard[x][y] = gameboard[x - 1][y];
+                gameboard[x - 1][y] = 0;
+            }
+        }
+        SpawnMax++;
+        SpawnMin++;
+    }
+    while (SpawnMin > HMax) { //if needs to be moved to the left
+    console.log("moveleft");
+        for (x = 7; x < 21; x++) {
+            for (y = 0; y < 7; y++) {
+                gameboard[x][y] = gameboard[x + 1][y];
+                gameboard[x + 1][y] = 0;
+            }
+        }
+        SpawnMin--;
+        SpawnMax--;
+    }
+    //check bottom
+    SpawnMax = 0;
+    SpawnMin = 28;
+    for (x = 7; x < 22; x++) {
+        for (y = 22; y < 29; y++) {
+            if (gameboard[x][y] == -1) {
+                if (SpawnMax < x) {
+                    SpawnMax = x;
+                }
+                if (SpawnMin > x) {
+                    SpawnMin = x;
+                }
+            }
+        }
+    }
+    while (SpawnMax < HMin) { //if needs to be moved to the right
+        for (x = 21; x > 7; x--) {
+            for (y = 22; y < 29; y++) {
+                gameboard[x][y] = gameboard[x - 1][y];
+                gameboard[x - 1][y] = 0;
+            }
+        }
+        SpawnMax++;
+        SpawnMin++;
+    }
+    while (SpawnMin > HMax) { //if needs to be moved to the left
+        for (x = 7; x < 21; x++) {
+            for (y = 22; y < 29; y++) {
+                gameboard[x][y] = gameboard[x + 1][y];
+                gameboard[x + 1][y] = 0;
+            }
+        }
+        SpawnMin--;
+        SpawnMax--;
+    }
+    //check left
+    SpawnMax = 0;
+    SpawnMin = 28;
+    for (x = 0; x < 7; x++) {
+        for (y = 7; y < 22; y++) {
+            if (gameboard[x][y] == -1) {
+                if (SpawnMax < y) {
+                    SpawnMax = y;
+                }
+                if (SpawnMin > y) {
+                    SpawnMin = y;
+                }
+            }
+        }
+    }
+    while (SpawnMax < VMin) { //if needs to be moved down
+        for(y = 21; y > 7; y--){
+            for(x = 0; x < 7; x++){
+                gameboard[x][y] = gameboard[x][y - 1];
+                gameboard[x][y - 1] = 0;
+            }
+        }
+        SpawnMax++;
+        SpawnMin++;
+    }
+    while (SpawnMin > VMax) { //if needs to be moved up
+        for(y = 7; y < 21; y++){
+            for(x = 0; x < 7; x++){
+                gameboard[x][y] = gameboard[x][y + 1];
+                gameboard[x][y + 1] = 0;
+            }
+        }
+        SpawnMin--;
+        SpawnMax--;
+    }
+    //check right
+    SpawnMax = 0;
+    SpawnMin = 28;
+    for (x = 22; x < 29; x++) {
+        for (y = 7; y < 22; y++) {
+            if (gameboard[x][y] == -1) {
+                if (SpawnMax < y) {
+                    SpawnMax = y;
+                }
+                if (SpawnMin > y) {
+                    SpawnMin = y;
+                }
+            }
+        }
+    }
+    while (SpawnMax < VMin) { //if needs to be moved down
+        for(y = 21; y > 7; y--){
+            for(x = 22; x < 29; x++){
+                gameboard[x][y] = gameboard[x][y - 1];
+                gameboard[x][y - 1] = 0;
+            }
+        }
+        SpawnMax++;
+        SpawnMin++;
+    }
+    while (SpawnMin > VMax) { //if needs to be moved up
+        for(y = 7; y < 21; y++){
+            for(x = 22; x < 29; x++){
+                gameboard[x][y] = gameboard[x][y + 1];
+                gameboard[x][y + 1] = 0;
+            }
+        }
+        SpawnMin--;
+        SpawnMax--;
     }
 }
 
@@ -525,20 +728,18 @@ function cementingBlocks() {
     var x, y;
     for (x = 0; x < 29; x++) {
         for (y = 0; y < 29; y++) {
-            if (gameboard[x][y] == -1) {
+            if (gameboard[x][y] == -1 || (gameboard[x][y] > 0 && gameboard[x][y] < 8)) {
                 if (Math.abs(x - 14) > Math.abs(y - 14)) {
                     if (Math.abs(x - 14) > 7) {
                         gameOver = true;
                     }
                     gameboard[x][y] = Math.abs(x - 14);
-                    console.log(Math.abs(x - 14));
                 }
                 else {
                     if (Math.abs(y - 14) > 7) {
                         gameOver = true;
                     }
                     gameboard[x][y] = Math.abs(y - 14);
-                    console.log(Math.abs(y - 14));
                 }
             }
         }
@@ -549,9 +750,9 @@ function checkClears() {
     var clearOK;
     var x, y;
     var noClears = true;
-    for (var distance = 1; distance < 8; distance++) {
+    for (var distance = 1; distance < 8; distance++) { //check rings of distance length away
         clearOK = true;
-        for (y = 14 - distance; y <= 14 + distance; y++) {
+        for (y = 14 - distance; y <= 14 + distance; y++) { //scan left/right columns
             if (gameboard[14 - distance][y] === 0 || gameboard[14 + distance][y] === 0) {
                 clearOK = false;
                 if (!clearOK) {
@@ -559,7 +760,7 @@ function checkClears() {
                 }
             }
         }
-        for (x = 14 - distance; x <= 14 + distance; x++) {
+        for (x = 14 - distance; x <= 14 + distance; x++) { //scan top/bot rows
             if (gameboard[x][14 - distance] === 0 || gameboard[x][14 + distance] === 0) {
                 clearOK = false;
                 if (!clearOK) {
@@ -567,18 +768,27 @@ function checkClears() {
                 }
             }
         }
-        if (clearOK) {
-            for (y = 14 - distance + 1; y < 14 + distance; y++) {
-                gameboard[14 - distance][y] = 0;
-                gameboard[14 + distance][y] = 0;
+        if (clearOK) { //falling lines/remove blocks
+            for (y = 14 - distance + 1; y < 14 + distance; y++) { //left/right columns
+                for (x = 14 - distance; x > 0; x--) {
+                    gameboard[x][y] = gameboard[x - 1][y];
+                }
+                for (x = 14 + distance; x < 28; x++) {
+                    gameboard[x][y] = gameboard[x + 1][y];
+                }
             }
-            for (x = 14 - distance; x <= 14 + distance; x++) {
-                gameboard[x][14 - distance] = 0;
-                gameboard[x][14 + distance] = 0;
+            for (x = 14 - distance + 1; x <= 14 + distance; x++) { //top/bot rows
+                for (y = 14 - distance; y > 0; y--) {
+                    gameboard[x][y] = gameboard[x][y - 1];
+                }
+                for (y = 14 + distance; y < 28; y++) {
+                    gameboard[x][y] = gameboard[x][y + 1];
+                }
             }
+            cementingBlocks();
             noClears = false;
+            distance--;
         }
-
     }
     if (noClears) {
         console.log("spawning blocks");
@@ -597,9 +807,7 @@ function gameLoop() {
             moveBlock(moveDirection); //drop blocks 1 at a time
         }
         if (landed) {
-            console.log("whatIsHappening");
             checkClears();
-            console.log("Out of checkClears()");
         }
         drawGame();
     }
@@ -662,7 +870,6 @@ function drawGame() {
                     ctx.fillStyle = "#bbbbbb";
             }
             ctx.fillRect((boxSize + lineSize) * x + lineSize, (boxSize + lineSize) * y + lineSize, boxSize, boxSize);
-            //LATER ADDITION: draw boxes
         }
     }
 }

@@ -2,9 +2,9 @@ gameBoard squares: -1 is newly spawned, 0 means empty square, 1-7 is a colored b
 to be added sections of code marked by LATER ADDITION comment
 To be added:
     the gameplay (kinda important)
-    drawing boxes (in progress)
     rotatecounter variable limiting rotation
 COMPLETE:
+    drawing boxes (in progress)
     resizing for the canvas
     keyboard input added
 Difficulty sliders:
