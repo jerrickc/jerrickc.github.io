@@ -1,10 +1,12 @@
-gameBoard squares: -1 is core, 0 means empty square, 1-7 is a colored block, 8 is a seed block, and 9 is a newly spawned block
+gameBoard squares: -1 is newly spawned, 0 means empty square, 1-7 is a colored block, 8 is a core, 9 is indestructible
+to be added sections of code marked by LATER ADDITION comment
 To be added:
     the gameplay (kinda important)
     drawing boxes (in progress)
     rotatecounter variable limiting rotation
 COMPLETE:
     resizing for the canvas
+    keyboard input added
 Difficulty sliders:
     rotations allowed(1/2)
     board size(29x29/27x27)
