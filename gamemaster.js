@@ -20,7 +20,7 @@ $("#resizeButton").on("mousedown", function() {
     resize();
 });
 document.body.appendChild(resetButton);
-$("resetter").on("mousedown", function() {
+$("#resetter").on("mousedown", function() {
     restartGame();
 });
 document.body.appendChild(document.createElement("br"));
@@ -48,6 +48,7 @@ var theBigLoop = setInterval(function() {
 }, 100);
 //Game functions below
 function restartGame() {
+    console.log("attempting to restart");
     gameboard = makeBoard();
     gameWidth = $(canvas).width();
     gameHeight = $(canvas).height();
@@ -198,10 +199,7 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
             }
         }
     }
-    console.log("max: " + SpawnMax + " min: " + SpawnMin);
-    console.log("Centermax: " + HMax + " Centermin: " + HMin);
     while (SpawnMax < HMin) { //if needs to be moved to the right
-        console.log("moveright");
         for (x = 21; x > 7; x--) {
             for (y = 0; y < 7; y++) {
                 gameboard[x][y] = gameboard[x - 1][y];
@@ -212,7 +210,6 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         SpawnMin++;
     }
     while (SpawnMin > HMax) { //if needs to be moved to the left
-        console.log("moveleft");
         for (x = 7; x < 21; x++) {
             for (y = 0; y < 7; y++) {
                 gameboard[x][y] = gameboard[x + 1][y];
@@ -893,7 +890,6 @@ function checkClears() {
     }
     cementingBlocks();
     if (noClears) {
-        console.log("spawning blocks");
         score += 50;
         spawnBlocks();
         landed = false;
@@ -921,7 +917,6 @@ function gameLoop() {
     else {
         clearInterval(theBigLoop);
     }
-    console.log("looping");
 }
 
 function updateScore() {
