@@ -7,6 +7,7 @@ var scoreBlock = document.createElement("h3");
 var resetButton = document.createElement("button");
 var speedButton = document.createElement("button");
 speedButton.id = "speedChanger";
+speedButton.innerHTML = "Change game speed";
 resetButton.id = "resetter";
 resetButton.innerHTML = "Restart the game";
 scoreBlock.id = "displayHeader";
