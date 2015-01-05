@@ -1,9 +1,12 @@
 //Please wait warmly, document is preparing...
-var boxSize = 15;
+var boxSize = 14;
 var lineSize = 2;
 var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
 var scoreBlock = document.createElement("h3");
+var resetButton = document.createElement("button");
+resetButton.id = "resetter";
+resetButton.innerHTML = "Restart the game";
 scoreBlock.id = "displayHeader";
 canvas.id = "gamescreen";
 canvas.height = (boxSize + lineSize) * 29 + lineSize;
@@ -12,8 +15,13 @@ sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(scoreBlock);
 document.body.appendChild(sizeButton);
+document.body.appendChild(document.createElement("br"));
 $("#resizeButton").on("mousedown", function() {
     resize();
+});
+document.body.appendChild(resetButton);
+$("resetter").on("mousedown", function() {
+    restartGame();
 });
 document.body.appendChild(document.createElement("br"));
 document.body.appendChild(canvas);
@@ -39,6 +47,22 @@ var theBigLoop = setInterval(function() {
     gameLoop();
 }, 100);
 //Game functions below
+function restartGame() {
+    gameboard = makeBoard();
+    gameWidth = $(canvas).width();
+    gameHeight = $(canvas).height();
+    handleAction = false;
+    landed = false;
+    clearForMovement = false;
+    moveDirection = null;
+    gameOver = false;
+    score = 0;
+    spawnBlocks();
+    theBigLoop = setInterval(function() {
+        gameLoop();
+    }, 100);
+}
+
 function makeBoard() { //Javascript doesn't make 2D arrays with [][] so I put some arrays in my arrays
     var newBoard = new Array(29); //DIFFICULTY SLIDER: the board is 29x29 right now, might shrink it to 27x27
     for (var i = 0; i < 29; i++) {
@@ -874,7 +898,7 @@ function checkClears() {
         spawnBlocks();
         landed = false;
     }
-    else{
+    else {
         score += 1000;
     }
 }
@@ -894,7 +918,7 @@ function gameLoop() {
         drawGame();
         updateScore();
     }
-    else{
+    else {
         clearInterval(theBigLoop);
     }
     console.log("looping");
