@@ -5,6 +5,8 @@ var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
 var scoreBlock = document.createElement("h3");
 var resetButton = document.createElement("button");
+var speedButton = document.createElement("button");
+speedButton.id = "speedChanger";
 resetButton.id = "resetter";
 resetButton.innerHTML = "Restart the game";
 scoreBlock.id = "displayHeader";
@@ -19,7 +21,11 @@ document.body.appendChild(document.createElement("br"));
 $("#resizeButton").on("mousedown", function() {
     resize();
 });
-document.body.appendChild(resetButton);
+document.body.appendChild(speedButton); //Time Control!
+$("#speedChanger").on("mousedown", function() {
+    changeSpeed();
+});
+document.body.appendChild(resetButton); //Chronoshiftin
 $("#resetter").on("mousedown", function() {
     restartGame();
 });
@@ -47,6 +53,16 @@ var theBigLoop = setInterval(function() {
     gameLoop();
 }, 100);
 //Game functions below
+function changeSpeed() {
+    var newSpeed = prompt("Enter desired refresh speed in ms(default 100)");
+    clearInterval(theBigLoop);
+    if(newSpeed < 10){
+        newSpeed = 10;
+    }
+    theBigLoop = setInterval(function() {
+        gameLoop();
+    }, newSpeed);
+}
 function restartGame() {
     console.log("attempting to restart");
     gameboard = makeBoard();
@@ -113,7 +129,7 @@ function handleIt() { //Raid Leader
 }
 
 function resize() { //Leeet us zee if zis vurkz
-    var newSize = prompt("Enter desired box size in pixels");
+    var newSize = prompt("Enter desired box size in pixels(default 14)");
     if (newSize > 0) {
         boxSize = parseInt(newSize);
         gameWidth = (boxSize + lineSize) * 29 + lineSize; //gotta be large enough for 1 more line at the end of the squares + lines
