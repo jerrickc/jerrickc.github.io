@@ -6,6 +6,10 @@ var canvas = document.createElement("canvas");
 var scoreBlock = document.createElement("h4");
 var resetButton = document.createElement("button");
 var speedButton = document.createElement("button");
+var link = document.createElement("a");
+link.id = "gameSource";
+link.href = "https://github.com/jerrickc/jerrickc.github.io/";
+link.innerHTML = "Click here to view my source!"
 speedButton.id = "speedChanger";
 speedButton.innerHTML = "Change speed(ms)";
 resetButton.id = "resetter";
@@ -37,6 +41,8 @@ document.body.appendChild(resetButton); //Chronoshiftin
 $("#resetter").on("mousedown", function() {
     restartGame();
 });
+document.body.appendChild(document.createElement("br"));
+document.body.appendChild(link);
 window.addEventListener("keydown", function(e) {
     // no scrolling by arrow keys
     if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
