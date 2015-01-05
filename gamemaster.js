@@ -795,6 +795,7 @@ function checkClears() {
             }
         }
         if (clearOK || allClear) { //falling lines/remove blocks
+            noClears = false;
             allClear = true;
             if (distance == 7) {
                 for (y = 14 - distance; y <= 14 + distance; y++) { //left/right columns
