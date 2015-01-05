@@ -3,7 +3,7 @@ var boxSize = 14;
 var lineSize = 2;
 var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
-var scoreBlock = document.createElement("h3");
+var scoreBlock = document.createElement("h4");
 var resetButton = document.createElement("button");
 var speedButton = document.createElement("button");
 speedButton.id = "speedChanger";
@@ -17,7 +17,6 @@ canvas.width = (boxSize + lineSize) * 29 + lineSize;
 sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(scoreBlock);
-document.body.appendChild(document.createElement("br"));
 document.body.appendChild(canvas);
 document.getElementById("gamescreen").style = "display: block; margin: 0 auto;";
 $("*").on("keyup", function(event) {
@@ -28,14 +27,22 @@ document.body.appendChild(sizeButton);
 $("#resizeButton").on("mousedown", function() {
     resize();
 });
+document.body.appendChild(document.createElement("br"));
 document.body.appendChild(speedButton); //Time Control!
 $("#speedChanger").on("mousedown", function() {
     changeSpeed();
 });
+document.body.appendChild(document.createElement("br"));
 document.body.appendChild(resetButton); //Chronoshiftin
 $("#resetter").on("mousedown", function() {
     restartGame();
 });
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 //Document prep done by here, code below is the game    
 var ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = "false";
