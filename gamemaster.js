@@ -112,7 +112,7 @@ function makeBoard() { //Javascript doesn't make 2D arrays with [][] so I put so
     return newBoard;
 }
 
-function handleIt() { //Raid Leader
+function handleIt(event) { //Raid Leader
     if (!clearForMovement && !landed) {
         switch (event.which) { //37-40 left up right down
             case 37:
