@@ -890,7 +890,7 @@ function checkClears() {
     }
     cementingBlocks();
     if (noClears) {
-        score += 50;
+        score += 100;
         spawnBlocks();
         landed = false;
     }
