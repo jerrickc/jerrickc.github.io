@@ -7,7 +7,7 @@ var scoreBlock = document.createElement("h3");
 var resetButton = document.createElement("button");
 var speedButton = document.createElement("button");
 speedButton.id = "speedChanger";
-speedButton.innerHTML = "Change game speed";
+speedButton.innerHTML = "Change refresh";
 resetButton.id = "resetter";
 resetButton.innerHTML = "Restart the game";
 scoreBlock.id = "displayHeader";
@@ -18,7 +18,6 @@ sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(scoreBlock);
 document.body.appendChild(sizeButton);
-document.body.appendChild(document.createElement("br"));
 $("#resizeButton").on("mousedown", function() {
     resize();
 });
@@ -908,7 +907,7 @@ function checkClears() {
     }
     cementingBlocks();
     if (noClears) {
-        score += 100;
+        score += 50;
         spawnBlocks();
         landed = false;
     }
