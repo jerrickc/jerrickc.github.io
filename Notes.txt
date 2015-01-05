@@ -1,9 +1,9 @@
 gameBoard squares: -1 is newly spawned, 0 means empty square, 1-7 is a colored block, 8 is a core, 9 is indestructible
 to be added sections of code marked by LATER ADDITION comment
 To be added:
-    the gameplay (kinda important)
-    rotatecounter variable limiting rotation
+    rotatecounter variable limiting rotation(no longer necessary)
 COMPLETE:
+    the gameplay (wooooooo)
     drawing boxes (in progress)
     resizing for the canvas
     keyboard input added

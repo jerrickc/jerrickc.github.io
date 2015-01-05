@@ -3,11 +3,14 @@ var boxSize = 15;
 var lineSize = 2;
 var sizeButton = document.createElement("button");
 var canvas = document.createElement("canvas");
+var scoreBlock = document.createElement("h3");
+scoreBlock.id = "displayHeader";
 canvas.id = "gamescreen";
 canvas.height = (boxSize + lineSize) * 29 + lineSize;
 canvas.width = (boxSize + lineSize) * 29 + lineSize;
 sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
+document.body.appendChild(scoreBlock);
 document.body.appendChild(sizeButton);
 $("#resizeButton").on("mousedown", function() {
     resize();
@@ -30,10 +33,11 @@ var landed = false;
 var clearForMovement = false;
 var moveDirection = null;
 var gameOver = false;
+var score = 0;
 spawnBlocks();
 var theBigLoop = setInterval(function() {
     gameLoop();
-}, 150);
+}, 100);
 //Game functions below
 function makeBoard() { //Javascript doesn't make 2D arrays with [][] so I put some arrays in my arrays
     var newBoard = new Array(29); //DIFFICULTY SLIDER: the board is 29x29 right now, might shrink it to 27x27
@@ -173,7 +177,7 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
     console.log("max: " + SpawnMax + " min: " + SpawnMin);
     console.log("Centermax: " + HMax + " Centermin: " + HMin);
     while (SpawnMax < HMin) { //if needs to be moved to the right
-    console.log("moveright");
+        console.log("moveright");
         for (x = 21; x > 7; x--) {
             for (y = 0; y < 7; y++) {
                 gameboard[x][y] = gameboard[x - 1][y];
@@ -184,7 +188,7 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         SpawnMin++;
     }
     while (SpawnMin > HMax) { //if needs to be moved to the left
-    console.log("moveleft");
+        console.log("moveleft");
         for (x = 7; x < 21; x++) {
             for (y = 0; y < 7; y++) {
                 gameboard[x][y] = gameboard[x + 1][y];
@@ -245,8 +249,8 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         }
     }
     while (SpawnMax < VMin) { //if needs to be moved down
-        for(y = 21; y > 7; y--){
-            for(x = 0; x < 7; x++){
+        for (y = 21; y > 7; y--) {
+            for (x = 0; x < 7; x++) {
                 gameboard[x][y] = gameboard[x][y - 1];
                 gameboard[x][y - 1] = 0;
             }
@@ -255,8 +259,8 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         SpawnMin++;
     }
     while (SpawnMin > VMax) { //if needs to be moved up
-        for(y = 7; y < 21; y++){
-            for(x = 0; x < 7; x++){
+        for (y = 7; y < 21; y++) {
+            for (x = 0; x < 7; x++) {
                 gameboard[x][y] = gameboard[x][y + 1];
                 gameboard[x][y + 1] = 0;
             }
@@ -280,8 +284,8 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         }
     }
     while (SpawnMax < VMin) { //if needs to be moved down
-        for(y = 21; y > 7; y--){
-            for(x = 22; x < 29; x++){
+        for (y = 21; y > 7; y--) {
+            for (x = 22; x < 29; x++) {
                 gameboard[x][y] = gameboard[x][y - 1];
                 gameboard[x][y - 1] = 0;
             }
@@ -290,8 +294,8 @@ function spinBoard(direction) { //LATER ADDITION: add rotatecounter //DIFFICULTY
         SpawnMin++;
     }
     while (SpawnMin > VMax) { //if needs to be moved up
-        for(y = 7; y < 21; y++){
-            for(x = 22; x < 29; x++){
+        for (y = 7; y < 21; y++) {
+            for (x = 22; x < 29; x++) {
                 gameboard[x][y] = gameboard[x][y + 1];
                 gameboard[x][y + 1] = 0;
             }
@@ -750,6 +754,7 @@ function checkClears() {
     var clearOK;
     var x, y;
     var noClears = true;
+    var allClear = false;
     for (var distance = 1; distance < 8; distance++) { //check rings of distance length away
         clearOK = true;
         for (y = 14 - distance; y <= 14 + distance; y++) { //scan left/right columns
@@ -768,32 +773,109 @@ function checkClears() {
                 }
             }
         }
-        if (clearOK) { //falling lines/remove blocks
-            for (y = 14 - distance + 1; y < 14 + distance; y++) { //left/right columns
-                for (x = 14 - distance; x > 0; x--) {
-                    gameboard[x][y] = gameboard[x - 1][y];
+        if (clearOK || allClear) { //falling lines/remove blocks
+            allClear = true;
+            if (distance == 7) {
+                for (y = 14 - distance; y <= 14 + distance; y++) { //left/right columns
+                    gameboard[14 - distance][y] = 0;
+                    gameboard[14 + distance][y] = 0;
                 }
-                for (x = 14 + distance; x < 28; x++) {
-                    gameboard[x][y] = gameboard[x + 1][y];
-                }
-            }
-            for (x = 14 - distance + 1; x <= 14 + distance; x++) { //top/bot rows
-                for (y = 14 - distance; y > 0; y--) {
-                    gameboard[x][y] = gameboard[x][y - 1];
-                }
-                for (y = 14 + distance; y < 28; y++) {
-                    gameboard[x][y] = gameboard[x][y + 1];
+                for (x = 14 - distance; x <= 14 + distance; x++) { //top/bot rows
+                    gameboard[x][14 - distance] = 0;
+                    gameboard[x][14 + distance] = 0;
                 }
             }
-            cementingBlocks();
-            noClears = false;
-            distance--;
+            else {
+                for (y = 14 - distance + 1; y < 14 + distance; y++) { //left/right columns
+                    gameboard[14 - distance][y] = gameboard[14 - distance - 1][y];
+                    gameboard[14 + distance][y] = gameboard[14 + distance + 1][y];
+                }
+                for (x = 14 - distance + 1; x < 14 + distance; x++) { //top/bot rows
+                    gameboard[x][14 - distance] = gameboard[x][14 - distance - 1];
+                    gameboard[x][14 + distance] = gameboard[x][14 + distance + 1];
+                }
+                //drop corners
+                var cornerAdjacencies;
+                //check topleft
+                cornerAdjacencies = 0;
+                if (gameboard[14 - distance - 1][14 - distance - 1] > 0 && gameboard[14 - distance - 1][14 - distance - 1] < 8) { //checks diagonal
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 - distance][14 - distance - 1] > 0 && gameboard[14 - distance][14 - distance - 1] < 8) { //checks above
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 - distance - 1][14 - distance] > 0 && gameboard[14 - distance - 1][14 - distance] < 8) { //checks left
+                    cornerAdjacencies++;
+                }
+                if (cornerAdjacencies >= 2) {
+                    gameboard[14 - distance][14 - distance] = 1;
+                }
+                else {
+                    gameboard[14 - distance][14 - distance] = 0;
+                }
+                //check topright
+                cornerAdjacencies = 0;
+                if (gameboard[14 + distance + 1][14 - distance - 1] > 0 && gameboard[14 + distance + 1][14 - distance - 1] < 8) { //checks diagonal
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 + distance][14 - distance - 1] > 0 && gameboard[14 + distance][14 - distance - 1] < 8) { //checks above
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 + distance + 1][14 - distance] > 0 && gameboard[14 + distance + 1][14 - distance] < 8) { //checks right
+                    cornerAdjacencies++;
+                }
+                if (cornerAdjacencies >= 2) {
+                    gameboard[14 + distance][14 - distance] = 1;
+                }
+                else {
+                    gameboard[14 + distance][14 - distance] = 0;
+                }
+                //check botright
+                cornerAdjacencies = 0;
+                if (gameboard[14 + distance + 1][14 + distance + 1] > 0 && gameboard[14 + distance + 1][14 + distance + 1] < 8) { //checks diagonal
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 + distance][14 + distance + 1] > 0 && gameboard[14 + distance][14 + distance + 1] < 8) { //checks below
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 + distance + 1][14 + distance] > 0 && gameboard[14 + distance + 1][14 + distance] < 8) { //checks right
+                    cornerAdjacencies++;
+                }
+                if (cornerAdjacencies >= 2) {
+                    gameboard[14 + distance][14 + distance] = 1;
+                }
+                else {
+                    gameboard[14 + distance][14 + distance] = 0;
+                }
+                //check botleft
+                cornerAdjacencies = 0;
+                if (gameboard[14 - distance - 1][14 + distance + 1] > 0 && gameboard[14 - distance - 1][14 + distance + 1] < 8) { //checks diagonal
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 - distance][14 + distance + 1] > 0 && gameboard[14 - distance][14 + distance + 1] < 8) { //checks below
+                    cornerAdjacencies++;
+                }
+                if (gameboard[14 - distance - 1][14 + distance] > 0 && gameboard[14 - distance - 1][14 + distance] < 8) { //checks left
+                    cornerAdjacencies++;
+                }
+                if (cornerAdjacencies >= 2) {
+                    gameboard[14 - distance][14 + distance] = 1;
+                }
+                else {
+                    gameboard[14 - distance][14 + distance] = 0;
+                }
+            }
         }
     }
+    cementingBlocks();
     if (noClears) {
         console.log("spawning blocks");
+        score += 50;
         spawnBlocks();
         landed = false;
+    }
+    else{
+        score += 1000;
     }
 }
 
@@ -810,6 +892,20 @@ function gameLoop() {
             checkClears();
         }
         drawGame();
+        updateScore();
+    }
+    else{
+        clearInterval(theBigLoop);
+    }
+    console.log("looping");
+}
+
+function updateScore() {
+    if (!gameOver) {
+        document.getElementById("displayHeader").innerHTML = "Score: " + score + " pts";
+    }
+    else {
+        document.getElementById("displayHeader").innerHTML = "Game Over: " + score + " pts";
     }
 }
 
@@ -864,7 +960,7 @@ function drawGame() {
                     ctx.fillStyle = "#888888";
                     break;
                 case 9:
-                    ctx.fillStyle = "#bbbbbb";
+                    ctx.fillStyle = "#DDDDDD";
                     break;
                 default:
                     ctx.fillStyle = "#bbbbbb";
