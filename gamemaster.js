@@ -37,16 +37,16 @@ $("*").on("keyup", function(event) {
     event.stopPropagation();
 });
 if($("#speedChanger").width() > $("#resizeButton").width() && $("#speedChanger").width() > $("#resetter").width()){
-    $("#resizeButton").width() = $("#speedChanger").width();
-    $("#resetter").width() = $("#speedChanger").width();
+    $("#resizeButton").width = $("#speedChanger").width();
+    $("#resetter").width = $("#speedChanger").width();
 }
 else if($("#resizeButton").width() > $("#speedChanger").width() && $("#resizeButton").width() > $("#resetter").width()){
-    $("#speedChanger").width() = $("#resizeButton").width();
-    $("#resetter").width() = $("#resizeButton").width();
+    $("#speedChanger").width = $("#resizeButton").width();
+    $("#resetter").width = $("#resizeButton").width();
 }
 else{
-    $("#resizeButton").width() = $("#resetter").width();
-    $("#speedChanger").width() = $("#resetter").width();
+    $("#resizeButton").width = $("#resetter").width();
+    $("#speedChanger").width = $("#resetter").width();
 }
 //Document prep done by here, code below is the game    
 var ctx = canvas.getContext("2d");
