@@ -17,6 +17,13 @@ canvas.width = (boxSize + lineSize) * 29 + lineSize;
 sizeButton.id = "resizeButton";
 sizeButton.innerHTML = "Resize the game";
 document.body.appendChild(scoreBlock);
+document.body.appendChild(document.createElement("br"));
+document.body.appendChild(canvas);
+document.getElementById("gamescreen").style = "display: block; margin: 0 auto;";
+$("*").on("keyup", function(event) {
+    handleIt(event);
+    event.stopPropagation();
+});
 document.body.appendChild(sizeButton);
 $("#resizeButton").on("mousedown", function() {
     resize();
@@ -29,25 +36,6 @@ document.body.appendChild(resetButton); //Chronoshiftin
 $("#resetter").on("mousedown", function() {
     restartGame();
 });
-document.body.appendChild(document.createElement("br"));
-document.body.appendChild(canvas);
-document.getElementById("gamescreen").style = "display: block; margin: 0 auto;";
-$("*").on("keyup", function(event) {
-    handleIt(event);
-    event.stopPropagation();
-});
-if($("#speedChanger").width() > $("#resizeButton").width() && $("#speedChanger").width() > $("#resetter").width()){
-    $("#resizeButton").width = $("#speedChanger").width();
-    $("#resetter").width = $("#speedChanger").width();
-}
-else if($("#resizeButton").width() > $("#speedChanger").width() && $("#resizeButton").width() > $("#resetter").width()){
-    $("#speedChanger").width = $("#resizeButton").width();
-    $("#resetter").width = $("#resizeButton").width();
-}
-else{
-    $("#resizeButton").width = $("#resetter").width();
-    $("#speedChanger").width = $("#resetter").width();
-}
 //Document prep done by here, code below is the game    
 var ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = "false";
