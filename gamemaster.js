@@ -61,6 +61,7 @@ var clearForMovement = false;
 var moveDirection = null;
 var gameOver = false;
 var score = 0;
+var combo = 0;
 spawnBlocks();
 var theBigLoop = setInterval(function() {
     gameLoop();
@@ -923,9 +924,11 @@ function checkClears() {
         score += 50;
         spawnBlocks();
         landed = false;
+        combo = 0;
     }
     else {
-        score += 1000;
+        score += (1000 * combo) + 1000;
+        combo++;
     }
 }
 
